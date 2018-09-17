@@ -1,0 +1,6 @@
+!noci
+data/System/GeoIPPlugin.txt 0644
+lib/Foswiki/Plugins/GeoIPPlugin/Config.spec 0644
+lib/Foswiki/Plugins/GeoIPPlugin/Core.pm 0644
+lib/Foswiki/Plugins/GeoIPPlugin/DEPENDENCIES 0644
+lib/Foswiki/Plugins/GeoIPPlugin.pm 0644

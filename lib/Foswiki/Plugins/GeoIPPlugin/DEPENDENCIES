@@ -1,0 +1,4 @@
+GeoIP2,>=2,CPAN,Required
+Try::Tiny,>=0,CPAN,Required
+MaxMind::DB::Reader,>=1,CPAN,Required
+MaxMind::DB::Reader::XS,>=1,CPAN,Optional

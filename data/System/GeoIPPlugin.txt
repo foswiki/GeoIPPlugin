@@ -1,0 +1,149 @@
+%META:TOPICINFO{author="micha" comment="reprev" date="1536585065" format="1.1" reprev="3" version="3"}%
+---+!! %TOPIC%
+%FORMFIELD{"Description"}%
+
+%TOC%
+
+---++ Description
+
+This plugin lets access <nop>GeoIP information as provided by [[https://www.maxmind.com][MaxMind]].
+Use <nop>GeoIP intelligence for content personalization, ad targeting, traffic analysis, digital rights management and more.
+The plugin needs the <nop>GeoIP database to be downloaded to the wiki server. Either use the professional version or the
+[[https://dev.maxmind.com/geoip/geoip2/geolite2/][GeoLite2]] database. This plugin integrates well with [[Foswiki:Extensions/GoogleMapsPlugin][GoogleMapsPlugin]]
+to display the location of an IP address directly on a map.
+
+---++ <nop>GeoLite2 License
+The <nop>GeoLite2 databases are distributed under the Creative Commons Attribution-ShareAlike 4.0 International License. 
+The attribution requirement may be met by including the following in all advertising and documentation mentioning features of or use of this database:
+
+<verbatim class="html">
+This product includes GeoLite2 data created by MaxMind, available from
+<a href="http://www.maxmind.com">http://www.maxmind.com</a>.
+</verbatim>
+
+---++ Syntax
+=%<nop>GEOIP{"&lt;ip-addr>" format="$postal_code $city, $country ($country_cod)"}%=
+
+| *Parameter* | *Description* | *Default* |
+| ="..."= | ip address | current remote address |
+| =format= | format string; see below for more info | =$city= |
+
+The following variables may be used in a format string to expand to the according properties of a data record.
+Note that some information is _not_ available in the freely available <nop>GeoLite2 version of the database.
+
+   * =$addr= 
+   * =$found=
+   * =$city=
+   * =$city_id=
+   * =$country=
+   * =$country_id=
+   * =$country_code= 
+   * =$continent=
+   * =$continent_id=
+   * =$continent_code=
+   * =$location_accuracy_radius=
+   * =$location_average_income=
+   * =$location_latitude=
+   * =$location_longitude=
+   * =$location_population_density=
+   * =$location_time_zone=
+   * =$postal_code=
+   * =$traits_autonomous_system_number=
+   * =$traits_autonomous_system_organization=
+   * =$traits_connection_type=
+   * =$traits_domain=
+   * =$traits_isp=
+   * =$traits_organization=
+   * =$traits_user_type=
+   * =$traits_is_anonymous=
+   * =$traits_is_anonymous_vpn=
+   * =$traits_is_hosting_provider=
+   * =$traits_is_legitimate_proxy=
+   * =$traits_is_public_proxy=
+   * =$traits_is_satellite_provider=
+   * =$traits_is_tor_exit_node=
+
+---++ Examples
+
+<verbatim class="tml">
+%GEOIP{"%URLPARAM{"addr"}%"
+   format="$percntIF{\"$found\" 
+            then=\"You come from $postal_code $city $country ($country_code)\"
+            else=\"Unknown address $addr.\"
+          }$percnt"
+}%
+</verbatim>
+
+<verbatim class="tml">
+%GEOIP{"%URLPARAM{"addr"}%" format="
+| *Propertyp* | *Value* |
+| city | $city |
+| city_id | $city_id |
+| postal_code | $postal_code |
+| country | $country |
+| country_id | $country_id |
+| country_code | $country_code |
+| country_is_in_european_union | $country_is_in_european_union |
+| continent | $continent |
+| continent_id | $continent_id |
+| continent_code | $continent_code |
+| location_latitude | $location_latitude |
+| location_longitude | $location_longitude |
+| location_accuracy_radius | $location_accuracy_radius |
+| location_time_zone | $location_time_zone |
+| location_population_density | $location_population_density |
+| location_average_income | $location_average_income |
+| traits_autonomous_system_number | $traits_autonomous_system_number |
+| traits_autonomous_system_organization | $traits_autonomous_system_organization |
+| traits_connection_type | $traits_connection_type |
+| traits_domain | $traits_domain |
+| traits_isp | $traits_isp |
+| traits_usertype | $traits_user_type |
+| traits_organization | $traits_organization |
+| traits_is_anonymous | $traits_is_anonymous |
+| traits_is_anonymous_vpn | $traits_is_anonymous_vpn |
+| traits_is_hosting_provider | $traits_is_hosting_provider |
+| traits_is_legitimate_proxy | $traits_is_legitimate_proxy |
+| traits_is_public_proxy | $traits_is_public_proxy |
+| traits_is_satellite_provider | $traits_is_satellite_provider |
+| traits_is_tor_exit_node | $traits_is_tor_exit_node | 
+"}%
+</verbatim>
+
+<verbatim class="tml">
+%GEOIP{"%URLPARAM{"addr"}%" format="
+$percntGOOGLEMAPS{
+   center=\"$location_latitude,$location_longitude\"
+   markeraddress=\"$location_latitude,$location_longitude\"
+   zoom=\"10\"
+   height=\"600px\"
+}$percnt"}%
+</verbatim>
+
+---++ Installation Instructions
+
+This plugin makes use of the [[CPAN:GeoIP2]] perl module. It only depends on the pure Perl implementation of the <nop>MaxMind database reader CPAN:MaxMind::DB::Reader. 
+If you install the libmaxminddb library (http://maxmind.github.io/libmaxminddb/) and CPAN:MaxMind::DB::Reader::XS, then the XS implementation will be loaded automatically. The XS implementation is approximately 100x faster than the pure Perl implementation.
+
+On ubuntu systems you may use [[https://launchpad.net/~maxmind/+archive/ubuntu/ppa][this repository]] to install the required binaries.
+
+%$INSTALL_INSTRUCTIONS%
+
+---++ Dependencies
+%$DEPENDENCIES%
+
+---++ Change History
+
+%TABLE{columnwidths="7em" tablewidth="100%"}%
+| 17 Sep 2018 | initial release |
+
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="Author" title="Author" value="Michael Daum"}%
+%META:FIELD{name="Version" title="Version" value="%25$VERSION%25"}%
+%META:FIELD{name="Release" title="Release" value="%25$RELEASE%25"}%
+%META:FIELD{name="Description" title="Description" value="%25$SHORTDESCRIPTION%25"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/%25TOPIC%25"}%
+%META:FIELD{name="Copyright" title="Copyright" value="2017-2018 Michael Daum http://michaeldaumconsulting.com"}%
+%META:FIELD{name="License" title="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
+%META:FIELD{name="Home" title="Home" value="https://foswiki.org/Extensions/%25TOPIC%25"}%
+%META:FIELD{name="Support" title="Support" value="https://foswiki.org/Support/%25TOPIC%25"}%
