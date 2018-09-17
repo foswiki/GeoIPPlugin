@@ -1,2 +1,10 @@
 *,v
 *.gz
+*.swp
+/GeoIPPlugin.md5
+/GeoIPPlugin.sha1
+/GeoIPPlugin.tgz
+/GeoIPPlugin.txt
+/GeoIPPlugin.zip
+/GeoIPPlugin_installer
+/GeoIPPlugin_installer.pl
