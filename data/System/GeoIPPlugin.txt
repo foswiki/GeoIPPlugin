@@ -10,7 +10,8 @@ This plugin lets access <nop>GeoIP information as provided by [[https://www.maxm
 Use <nop>GeoIP intelligence for content personalization, ad targeting, traffic analysis, digital rights management and more.
 The plugin needs the <nop>GeoIP database to be downloaded to the wiki server. Either use the professional version or the
 [[https://dev.maxmind.com/geoip/geoip2/geolite2/][GeoLite2]] database. This plugin integrates well with [[Foswiki:Extensions/GoogleMapsPlugin][GoogleMapsPlugin]]
-to display the location of an IP address directly on a map.
+to display the location of an IP address directly on a map. You may either download the data yourself or let the plugin download it by itself
+from a configurable URL.
 
 ---++ <nop>GeoLite2 License
 The <nop>GeoLite2 databases are distributed under the Creative Commons Attribution-ShareAlike 4.0 International License. 
@@ -135,6 +136,7 @@ On ubuntu systems you may use [[https://launchpad.net/~maxmind/+archive/ubuntu/p
 ---++ Change History
 
 %TABLE{columnwidths="7em" tablewidth="100%"}%
+| 12 Nov 2019 | added downloader for the <nop>GeoLite2 database |
 | 17 Sep 2018 | initial release |
 
 %META:FORM{name="PackageForm"}%
@@ -143,7 +145,7 @@ On ubuntu systems you may use [[https://launchpad.net/~maxmind/+archive/ubuntu/p
 %META:FIELD{name="Release" title="Release" value="%25$RELEASE%25"}%
 %META:FIELD{name="Description" title="Description" value="%25$SHORTDESCRIPTION%25"}%
 %META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/%25TOPIC%25"}%
-%META:FIELD{name="Copyright" title="Copyright" value="2017-2018 Michael Daum http://michaeldaumconsulting.com"}%
+%META:FIELD{name="Copyright" title="Copyright" value="2017-2019 Michael Daum http://michaeldaumconsulting.com"}%
 %META:FIELD{name="License" title="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
 %META:FIELD{name="Home" title="Home" value="https://foswiki.org/Extensions/%25TOPIC%25"}%
 %META:FIELD{name="Support" title="Support" value="https://foswiki.org/Support/%25TOPIC%25"}%

@@ -1,4 +1,6 @@
 GeoIP2,>=2,CPAN,Required
 Try::Tiny,>=0,CPAN,Required
+LWP::Simple,>=0,cpan,Required
+Archive::Tar,>=0,cpan,Required
 MaxMind::DB::Reader,>=1,CPAN,Required
 MaxMind::DB::Reader::XS,>=1,CPAN,Optional

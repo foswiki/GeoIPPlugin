@@ -6,5 +6,9 @@
 # location of GeoIP2 database file
 $Foswiki::cfg{GeoIPPlugin}{DatabaseFile} = '';
 
+# **URL**
+# Url from where to download an mirror database updates
+$Foswiki::cfg{GeoIPPlugin}{DatabaseUrl} = '';
+
 
 1;

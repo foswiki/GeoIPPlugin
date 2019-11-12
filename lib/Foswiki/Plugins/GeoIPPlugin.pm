@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, https://foswiki.org/
 #
-# GeoIPPlugin is Copyright (C) 2017-2018 Michael Daum http://michaeldaumconsulting.com
+# GeoIPPlugin is Copyright (C) 2017-2019 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -20,8 +20,8 @@ use warnings;
 
 use Foswiki::Func ();
 
-our $VERSION = '1.00';
-our $RELEASE = '10 Sep 2018';
+our $VERSION = '2.00';
+our $RELEASE = '21 Oct 2019';
 our $SHORTDESCRIPTION = 'Geo Location Information';
 our $NO_PREFS_IN_TOPIC = 1;
 our $core;

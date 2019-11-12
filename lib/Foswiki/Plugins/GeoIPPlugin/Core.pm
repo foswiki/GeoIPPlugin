@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, https://foswiki.org/
 #
-# GeoIPPlugin is Copyright (C) 2017-2018 Michael Daum http://michaeldaumconsulting.com
+# GeoIPPlugin is Copyright (C) 2017-2019 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -20,10 +20,11 @@ use warnings;
 
 use Foswiki::Func ();
 use GeoIP2::Database::Reader ();
+use LWP::Simple ();
+use Archive::Tar ();
 
 # SMELL: can't use Error as it can't catch GeoIP2 errors
 use Try::Tiny;
-
 
 use constant TRACE => 0; # toggle me
 
@@ -37,9 +38,14 @@ sub new {
   my $class = shift;
 
   my $this = bless({
-    databaseFile => $Foswiki::cfg{GeoIPPlugin}{DatabaseFile};
+    databaseUrl => $Foswiki::cfg{GeoIPPlugin}{DatabaseUrl} || "https://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz",
+    databaseFile => $Foswiki::cfg{GeoIPPlugin}{DatabaseFile},
     @_
   }, $class);
+
+  if ($Foswiki::cfg{PROXY}{HOST}) {
+    $LWP::Simple::ua->proxy(['http', 'https', 'ftp'], $Foswiki::cfg{PROXY}{HOST});
+  }
 
   return $this;
 }
@@ -52,18 +58,53 @@ sub finish {
 }
 
 sub reader {
-  my ($this) = @_;
+  my $this = shift;
 
   unless($this->{_reader}) {
-    writeDebug("reading database from $this->{database}");
     $this->{_reader} = GeoIP2::Database::Reader->new(
-      file => $this->{databaseFile}
+      file => $this->getDatabaseFile(),
     );
   }
 
   writeDebug("reader ".($this->{_reader}//"undef"));
 
   return $this->{_reader};
+}
+
+sub getDatabaseFile {
+  my $this = shift;
+
+  unless ($this->{databaseFile} && -e $this->{databaseFile}) {
+
+    $this->{databaseFile} = Foswiki::Func::getWorkArea("GeoIPPlugin")."/GeoLite2-City.mmdb";
+
+    my $refresh = Foswiki::Func::getRequestObject()->param("refresh") || '';
+
+    if (-e $this->{databaseFile} && !($refresh =~ /^(on|geoip)/)) {
+      writeDebug("already got the geolite database");
+
+    } else {
+      my $tarFile = Foswiki::Func::getWorkArea("GeoIPPlugin")."/GeoLite2-City.tar.gz";
+      writeDebug("mirroring database from ".($this->{databaseUrl}//'undef')." to $tarFile");
+
+      my $code = LWP::Simple::mirror($this->{databaseUrl}, $tarFile);
+      writeDebug("code=$code");
+      return if LWP::Simple::is_error($code);    
+
+      if ($code != 304 || !(-e $this->{databaseFile})) {
+        writeDebug("extracting database from tar file");
+        my $tar = Archive::Tar->new($tarFile);
+        my ($mmdbFile) = grep {/\.mmdb$/} $tar->list_files(); # first mmdb file
+        $tar->extract_file($mmdbFile, $this->{databaseFile});    
+      } else {
+        writeDebug("not modified");
+      }
+    } 
+  }
+
+  writeDebug("reading database from $this->{databaseFile}");
+
+  return $this->{databaseFile};
 }
 
 sub model {
